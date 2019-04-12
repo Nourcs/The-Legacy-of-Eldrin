@@ -66,4 +66,18 @@ function applyButton(thisComponent) {
     .on("pointerdown", function(e) {
       // Put Function here
     }); // Go back to the Main Menu Scene when clicking on the Back Button
+
+  return applyButton;
+}
+
+function retrieveData() {
+  let settings = JSON.parse(localStorage.getItem("settings"));
+  if (settings) {
+    console.log(settings);
+  } else {
+    localStorage.setItem("settings", JSON.stringify(defaultSettings));
+    settings = JSON.parse(localStorage.getItem("settings"));
+    console.log(settings);
+  }
+  return settings;
 }

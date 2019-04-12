@@ -3,9 +3,9 @@ class CreditsScene extends Phaser.Scene {
     super({ key: "CreditsScene", active: false });
   }
   preload() {
-    loadBlurredBg(this);
+    loadBlurredBg(this); // Load the background image
   }
   create() {
-    sharedBlurredBg(this);
+    sharedBlurredBg(this); // Draw the blurred background image
   }
 }

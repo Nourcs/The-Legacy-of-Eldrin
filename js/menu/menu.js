@@ -7,6 +7,7 @@ class MenuScene extends Phaser.Scene {
       "menuBackground",
       "./assets/menu/background/background.jpg"
     ); // Load the background image
+    // this.scene.prel();
   }
   create() {
     let background = this.add.image(0, 0, "menuBackground").setOrigin(0, 0); // Draw Main Menu background

@@ -2,18 +2,22 @@ class MPScene extends Phaser.Scene {
   constructor() {
     super({ key: "MPScene", active: false });
   }
+
   preload() {
-    loadBlurredBg(this);
+    loadBlurredBg(this); // Load the blurred Background
   }
+
   create() {
-    sharedBlurredBg(this);
+    sharedBlurredBg(this); // Draw the blurred Background
     let mpBtns = []; // Create Array of Buttons
+
     mpBtns.push(
       this.add.text(580, 230, "New Game", {
         fontFamily: "Chelsea Market",
         fontSize: 40
       })
     ); // Add New Game Button
+
     mpBtns.push(
       this.add.text(600, 300, "Continue", {
         fontFamily: "Chelsea Market",
@@ -28,7 +32,6 @@ class MPScene extends Phaser.Scene {
         .on("pointerover", function() {
           document.body.style.cursor = "pointer";
           mpBtns[i].alpha = 1;
-          mpBtns[i];
         }) // On hover : set the opacity to 1
         .on("pointerout", function() {
           document.body.style.cursor = "auto";

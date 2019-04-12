@@ -35,5 +35,14 @@ class SPScene extends Phaser.Scene {
           spBtns[i].alpha = 0.5;
         }); // On out : set the opacity to 0.5
     }
+
+    spBtns[0].on(
+      "pointerdown",
+      function() {
+        document.body.style.cursor = "auto";
+        this.scene.start("NewGameScene");
+      },
+      this
+    );
   }
 }
