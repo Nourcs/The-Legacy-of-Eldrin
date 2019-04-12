@@ -5,6 +5,9 @@ class Contrast extends Phaser.Scene {
   constructor() {
     super({ key: "Contrast", active: true });
   }
+
+  preoload() {}
+
   create() {
     let contrast = retrieveData().contrast;
 
@@ -14,9 +17,10 @@ class Contrast extends Phaser.Scene {
     let rect = new Phaser.Geom.Rectangle(0, 0, wWidth, wHeight);
     graphics.fillRectShape(rect);
 
-    console.log(this);
+    console.log("this", this);
   }
 }
+
 let config = {
   type: Phaser.AUTO,
   width: wWidth,
@@ -24,7 +28,8 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 200 }
+      gravity: { y: 0 },
+      debug: false
     }
   },
   scene: [
@@ -37,6 +42,7 @@ let config = {
     CreditsScene,
     Contrast,
     EscapeScene
+    // LevelOne
   ]
 };
 

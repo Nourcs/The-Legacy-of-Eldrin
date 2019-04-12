@@ -12,11 +12,17 @@ class EscapeScene extends Phaser.Scene {
   create() {
     let background = this.add.image(0, 0, "optionsBackground").setOrigin(0, 0); // Draw Options background
     let _this = this;
-    let contin = this.add.text(600, 250, "Continue", {
+    this.input.keyboard.on("keydown", function(e) {
+      if (e.key === "Escape") {
+        // _this.scene.run("EscapeScene");
+        _this.scene.switch("NewGameScene");
+      }
+    });
+    let contin = this.add.text(600, 230, "Continue", {
       fontFamily: "Chelsea Market",
       fontSize: 40
     });
-    let exit = this.add.text(650, 300, "Exit", {
+    let exit = this.add.text(650, 290, "Exit", {
       fontFamily: "Chelsea Market",
       fontSize: 40
     });
@@ -55,8 +61,7 @@ class EscapeScene extends Phaser.Scene {
         document.body.style.cursor = "auto";
         // _this.scene.resume("MenuScene");
         // _this.scene.start("MenuScene");
-        // _this.scene.remove("NewGameScene");
-
+        _this.scene.stop("NewGameScene");
         _this.scene.start("MenuScene");
       });
   }

@@ -8,6 +8,7 @@ class SPScene extends Phaser.Scene {
   create() {
     sharedBlurredBg(this);
     let spBtns = []; // Create Array of Buttons
+    let _this = this;
     spBtns.push(
       this.add.text(580, 230, "New Game", {
         fontFamily: "Chelsea Market",
@@ -36,13 +37,10 @@ class SPScene extends Phaser.Scene {
         }); // On out : set the opacity to 0.5
     }
 
-    spBtns[0].on(
-      "pointerdown",
-      function() {
-        document.body.style.cursor = "auto";
-        this.scene.start("NewGameScene");
-      },
-      this
-    );
+    spBtns[0].on("pointerdown", function() {
+      document.body.style.cursor = "auto";
+      console.log(_this);
+      _this.scene.start("NewGameScene");
+    });
   }
 }

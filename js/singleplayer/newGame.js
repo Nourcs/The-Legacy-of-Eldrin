@@ -10,6 +10,13 @@ class NewGameScene extends Phaser.Scene {
     ); // Load the background image
   }
   create() {
+    let _this = this;
+    this.input.keyboard.on("keydown", function(e) {
+      if (e.key === "Escape") {
+        // _this.scene.run("EscapeScene");
+        _this.scene.switch("EscapeScene");
+      }
+    });
     let background = this.add.image(0, 0, "optionsBackground").setOrigin(0, 0); // Draw Options background
     let txt = "Find the Hidden Items!";
 
@@ -53,16 +60,6 @@ class NewGameScene extends Phaser.Scene {
         //args: [],
         repeat: txt.length - 1
       });
-    });
-  }
-  update() {
-    let _this = this;
-    this.input.keyboard.on("keydown", function(e) {
-      if (e.key === "Escape") {
-        // _this.scene.run("EscapeScene");
-
-        _this.scene.switch("EscapeScene");
-      }
     });
   }
 }
