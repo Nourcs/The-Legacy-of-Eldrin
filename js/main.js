@@ -16,8 +16,6 @@ class Contrast extends Phaser.Scene {
     });
     let rect = new Phaser.Geom.Rectangle(0, 0, wWidth, wHeight);
     graphics.fillRectShape(rect);
-
-    console.log("this", this);
   }
 }
 

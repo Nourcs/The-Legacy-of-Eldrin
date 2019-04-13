@@ -73,11 +73,9 @@ function applyButton(thisComponent) {
 function retrieveData() {
   let settings = JSON.parse(localStorage.getItem("settings"));
   if (settings) {
-    console.log(settings);
   } else {
     localStorage.setItem("settings", JSON.stringify(defaultSettings));
     settings = JSON.parse(localStorage.getItem("settings"));
-    console.log(settings);
   }
   return settings;
 }
