@@ -27,7 +27,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(1175, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -79,7 +79,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(1175, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -130,7 +130,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(1175, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
