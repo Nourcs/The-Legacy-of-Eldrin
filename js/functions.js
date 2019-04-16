@@ -3,7 +3,7 @@ function sharedBlurredBg(thisComponent) {
     .image(0, 0, "optionsBackground")
     .setOrigin(0, 0); // Draw Options background
   let backButton = thisComponent.add.text(
-    window.innerWidth - 100,
+    window.innerWidth - 250,
     550,
     "Back",
     {
