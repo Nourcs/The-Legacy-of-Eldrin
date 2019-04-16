@@ -2,10 +2,15 @@ function sharedBlurredBg(thisComponent) {
   let background = thisComponent.add
     .image(0, 0, "optionsBackground")
     .setOrigin(0, 0); // Draw Options background
-  let backButton = thisComponent.add.text(1225, 550, "Back", {
-    fontFamily: "Chelsea Market",
-    fontSize: 40
-  }); // Add back Button
+  let backButton = thisComponent.add.text(
+    window.innerWidth - 100,
+    550,
+    "Back",
+    {
+      fontFamily: "Chelsea Market",
+      fontSize: 40
+    }
+  ); // Add back Button
 
   backButton.alpha = 0.5; // Setting the button to 0.5
 
