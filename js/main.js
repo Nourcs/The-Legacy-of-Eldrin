@@ -39,8 +39,9 @@ let config = {
     SkinsScene,
     CreditsScene,
     Contrast,
-    EscapeScene
-    // LevelOne
+    EscapeScene,
+    LevelOne,
+    LevelTwo
   ]
 };
 
