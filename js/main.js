@@ -27,21 +27,22 @@ let config = {
     default: "arcade",
     arcade: {
       gravity: { y: 0 },
-      debug: false
+      debug: true
     }
   },
   scene: [
-    MenuScene,
-    SPScene,
-    NewGameScene,
-    MPScene,
-    OptionsScene,
-    SkinsScene,
-    CreditsScene,
-    Contrast,
-    EscapeScene,
-    LevelOne,
-    LevelTwo
+    // MenuScene,
+    // SPScene,
+    // NewGameScene,
+    // MPScene,
+    // OptionsScene,
+    // SkinsScene,
+    // CreditsScene,
+    // Contrast,
+    // EscapeScene,
+    // LevelOne,
+    // LevelTwo,
+    LevelThree
   ]
 };
 

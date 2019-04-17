@@ -1,6 +1,10 @@
-let levelOne = true;
+let levelOne = false;
 let levelTwo = false;
-let levelThree = false;
+let levelThree = true;
+let levelThreeHintOne = false;
+let levelThreeHintTwo = false;
+let levelThreeHintThree = false;
+
 class NewGameScene extends Phaser.Scene {
   constructor() {
     super({ key: "NewGameScene", active: false });
@@ -29,7 +33,7 @@ class NewGameScene extends Phaser.Scene {
       this.time.delayedCall(3200, () => {
         let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
           fontFamily: "Chelsea Market",
-          fontSize: 35
+          fontSize: 3
         });
 
         contin.alpha = 0.5;
@@ -145,6 +149,169 @@ class NewGameScene extends Phaser.Scene {
           .on("pointerout", () => {
             document.body.style.cursor = "auto";
             contin.alpha = 0.5;
+          })
+          .on("pointerdown", () => {
+            document.body.style.cursor = "auto";
+            _this.scene.start("LevelThree");
+          });
+      });
+
+      // contin.destroy();
+
+      let thisC = this;
+      let jj = 0;
+      let texte = "";
+      let boston;
+      this.time.delayedCall(600, () => {
+        this.time.addEvent({
+          delay: 100, // ms
+          callback: () => {
+            if (jj > 0) boston.destroy();
+            texte += txt[jj];
+            boston = thisC.add.text(400, 450, texte, {
+              fontFamily: "Chelsea Market",
+              fontSize: 40
+            });
+            jj++;
+          },
+          //args: [],
+          repeat: txt.length - 1
+        });
+      });
+    } else if (levelThreeHintOne) {
+      // LEVEL THREE HINT One
+      let txt = "One equals to N";
+      this.add.text(50, 50, "Hint 1", {
+        fontFamily: "Chelsea Market",
+        fontSize: 35
+      });
+      this.time.delayedCall(3200, () => {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+          fontFamily: "Chelsea Market",
+          fontSize: 35
+        });
+
+        contin.alpha = 0.5;
+        contin
+          .setInteractive()
+          .on("pointerover", () => {
+            document.body.style.cursor = "pointer";
+            contin.alpha = 1;
+          })
+          .on("pointerout", () => {
+            document.body.style.cursor = "auto";
+            contin.alpha = 0.5;
+          })
+          .on("pointerdown", () => {
+            document.body.style.cursor = "auto";
+            _this.scene.switch("LevelThree");
+            _this.scene.stop("NewGameScene");
+          });
+      });
+
+      // contin.destroy();
+
+      let thisC = this;
+      let jj = 0;
+      let texte = "";
+      let boston;
+      this.time.delayedCall(600, () => {
+        this.time.addEvent({
+          delay: 100, // ms
+          callback: () => {
+            if (jj > 0) boston.destroy();
+            texte += txt[jj];
+            boston = thisC.add.text(400, 450, texte, {
+              fontFamily: "Chelsea Market",
+              fontSize: 40
+            });
+            jj++;
+          },
+          //args: [],
+          repeat: txt.length - 1
+        });
+      });
+    } else if (levelThreeHintTwo) {
+      // LEVEL THREE HINT TWO
+      let txt = "Zero equals to U";
+      this.add.text(50, 50, "Hint 2", {
+        fontFamily: "Chelsea Market",
+        fontSize: 35
+      });
+      this.time.delayedCall(3200, () => {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+          fontFamily: "Chelsea Market",
+          fontSize: 35
+        });
+
+        contin.alpha = 0.5;
+        contin
+          .setInteractive()
+          .on("pointerover", () => {
+            document.body.style.cursor = "pointer";
+            contin.alpha = 1;
+          })
+          .on("pointerout", () => {
+            document.body.style.cursor = "auto";
+            contin.alpha = 0.5;
+          })
+          .on("pointerdown", () => {
+            document.body.style.cursor = "auto";
+            _this.scene.switch("LevelThree");
+            _this.scene.stop("NewGameScene");
+          });
+      });
+
+      // contin.destroy();
+
+      let thisC = this;
+      let jj = 0;
+      let texte = "";
+      let boston;
+      this.time.delayedCall(600, () => {
+        this.time.addEvent({
+          delay: 100, // ms
+          callback: () => {
+            if (jj > 0) boston.destroy();
+            texte += txt[jj];
+            boston = thisC.add.text(400, 450, texte, {
+              fontFamily: "Chelsea Market",
+              fontSize: 40
+            });
+            jj++;
+          },
+          //args: [],
+          repeat: txt.length - 1
+        });
+      });
+    } else if (levelThreeHintThree) {
+      // LEVEL THREE HINT THREE
+      let txt = "One equals to R if it's Zero.";
+      this.add.text(50, 50, "Hint 3", {
+        fontFamily: "Chelsea Market",
+        fontSize: 35
+      });
+      this.time.delayedCall(3200, () => {
+        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+          fontFamily: "Chelsea Market",
+          fontSize: 35
+        });
+
+        contin.alpha = 0.5;
+        contin
+          .setInteractive()
+          .on("pointerover", () => {
+            document.body.style.cursor = "pointer";
+            contin.alpha = 1;
+          })
+          .on("pointerout", () => {
+            document.body.style.cursor = "auto";
+            contin.alpha = 0.5;
+          })
+          .on("pointerdown", () => {
+            document.body.style.cursor = "auto";
+            _this.scene.switch("LevelThree");
+            _this.scene.stop("NewGameScene");
           });
       });
 

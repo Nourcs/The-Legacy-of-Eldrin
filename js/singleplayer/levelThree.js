@@ -1,16 +1,21 @@
-let path;
-let status = false;
-class LevelTwo extends Phaser.Scene {
+status = false;
+let inputOneStatus = false;
+let inputOneText = "";
+class LevelThree extends Phaser.Scene {
   constructor() {
-    super({ key: "LevelTwo", active: false });
+    super({ key: "LevelThree", active: false });
     this.player;
   }
   preload() {
+    this.load.image(
+      "Background",
+      "././assets/options/background/background.jpg"
+    );
+
     this.load.image("Grass", "././assets/game/background/Grass.png");
     this.load.spritesheet("Eldrin", "././assets/sprites/EldrinWalking.png", {
       frameWidth: 29,
       frameHeight: 44,
-
       spacing: 28.5
     });
 
@@ -36,16 +41,18 @@ class LevelTwo extends Phaser.Scene {
     this.load.image("Bushes1", "././assets/game/background/Bushes1.png");
     this.load.image("RedTree", "././assets/game/background/RedTree.png");
     this.load.image("item", "././assets/game/background/Item.png");
-    for (let i = 1; i < 6; i++) {
-      this.load.image(`path${i}`, `././assets/game/background/path${i}.png`);
-    }
-    this.load.image("WaterLeft", "././assets/game/background/WaterLeft.png");
+    this.load.image("chest", "././assets/game/background/chest.png");
     for (let i = 1; i < 4; i++) {
       this.load.image(
         `monster${i}`,
         `././assets/game/background/Monster${i}.png`
       );
     }
+    for (let i = 1; i < 6; i++) {
+      this.load.image(`path${i}`, `././assets/game/background/path${i}.png`);
+    }
+    this.load.image("WaterLeft", "././assets/game/background/WaterLeft.png");
+
     this.load.image(
       "WaterBottom",
       "././assets/game/background/WaterBottom.png"
@@ -56,7 +63,7 @@ class LevelTwo extends Phaser.Scene {
     camera = this.cameras.main;
     camera.setViewport(0, 0, window.innerWidth, window.innerHeight);
     this.add.tileSprite(0, 0, 3000, 1500, "Grass").setOrigin(0, 0);
-
+    let _this = this;
     let water = this.physics.add.staticGroup();
     let trees = this.physics.add.staticGroup();
     path = this.physics.add.staticGroup();
@@ -139,6 +146,7 @@ class LevelTwo extends Phaser.Scene {
       .staticImage(2815, 353, "RedTree")
       .setOrigin(0, 0)
       .refreshBody();
+
     let hiddenItems = [];
     water
       .create(0, 0, "WaterLeft")
@@ -158,6 +166,14 @@ class LevelTwo extends Phaser.Scene {
       .refreshBody();
     trees
       .create(1172, 311, "Tree2")
+      .setOrigin(0, 0)
+      .refreshBody();
+    trees
+      .create(290, 0, "Tree3")
+      .setOrigin(0, 0)
+      .refreshBody();
+    trees
+      .create(300, 1110, "Tree4")
       .setOrigin(0, 0)
       .refreshBody();
     trees
@@ -219,6 +235,39 @@ class LevelTwo extends Phaser.Scene {
 
     this.add.image(2499, 1097, "House1");
     this.physics.world.setBounds(0, 0, 3000, 1500);
+    let monsters = [];
+    monsters.push([
+      this.physics.add
+        .staticImage(1200, 235, "monster3")
+        .setOrigin(0, 0)
+        .refreshBody(),
+      false
+    ]);
+    monsters.push([
+      this.physics.add
+        .staticImage(300, 1000, "monster3")
+        .setOrigin(0, 0)
+        .refreshBody(),
+      false
+    ]);
+    monsters.push([
+      this.physics.add
+        .staticImage(1000, 1270, "monster1")
+        .setOrigin(0, 0)
+        .refreshBody(),
+      false
+    ]);
+    let chestOne = this.physics.add
+      .staticImage(240, 5, "chest")
+      .setOrigin(0, 0)
+      .setScale(0.7)
+      .refreshBody();
+
+    let chestTwo = this.physics.add
+      .staticImage(1130, 1280, "chest")
+      .setOrigin(0, 0)
+      .setScale(0.7)
+      .refreshBody();
 
     player = this.physics.add.sprite(playerX, playerY, "Eldrin");
     player.setCollideWorldBounds(true);
@@ -251,6 +300,56 @@ class LevelTwo extends Phaser.Scene {
     });
     this.physics.add.collider(player, water);
     this.physics.add.collider(player, trees);
+    for (let i = 0; i < 3; i++) {
+      this.physics.add.collider(player, monsters[i][0], () => {
+        this.input.keyboard.on(
+          "keyup",
+          function(k) {
+            if (k.key === " " && monsters[i][1] === false) {
+              monsters[i][0].destroy();
+              score += 100;
+              scoreTxt.destroy();
+              scoreTxt = this.add.text(30, 60, `Score : ${score}`, {
+                fontFamily: "Chelsea Market",
+                fontSize: 25
+              });
+              scoreTxt.setScrollFactor(0);
+
+              monsters[i][1] = true;
+              if (i === 0) {
+                levelOne = false;
+                levelTwo = false;
+                levelThree = false;
+                levelThreeHintOne = true;
+                levelThreeHintTwo = false;
+                levelThreeHintThree = false;
+                _this.scene.switch("NewGameScene");
+              } else if (i === 1) {
+                levelOne = false;
+                levelTwo = false;
+                levelThree = false;
+                levelThreeHintOne = false;
+                levelThreeHintTwo = true;
+                levelThreeHintThree = false;
+
+                _this.scene.switch("NewGameScene");
+              } else if (i === 2) {
+                levelOne = false;
+                levelTwo = false;
+                levelThree = false;
+                levelThreeHintOne = false;
+                levelThreeHintTwo = false;
+                levelThreeHintThree = true;
+
+                _this.scene.switch("NewGameScene");
+              }
+            }
+          },
+          this
+        );
+      });
+    }
+    console.log(monsters);
 
     healthTxt = this.add.text(30, 30, `Health : ${health}`, {
       fontFamily: "Chelsea Market",
@@ -263,7 +362,6 @@ class LevelTwo extends Phaser.Scene {
 
     healthTxt.setScrollFactor(0);
     scoreTxt.setScrollFactor(0);
-    console.log(trees[9]);
     player.anims.play("left", true);
     player.anims.stop();
     let state = true;
@@ -301,6 +399,85 @@ class LevelTwo extends Phaser.Scene {
       if (e) {
         // console.log("Touched");
         status = true;
+      }
+    });
+    let statis2 = true;
+    this.physics.add.collider(player, chestOne, () => {
+      if (statis2) {
+        this.input.keyboard.on("keyup", function(k) {
+          if (k.key === "e") {
+            inputOneText = window.prompt("Hint : 1001", "Type in your Answer");
+            console.log(inputOneText);
+            if (inputOneText.toUpperCase() === "RUUN") {
+              let image = _this.add
+                .image(0, 0, "Background")
+                .setOrigin(0, 0)
+                .setScrollFactor(0);
+
+              let text = _this.add
+                .text(
+                  300,
+                  250,
+                  "I don't know why, but when I read RUUN in backwards \nit sounded familiar.",
+                  {
+                    fontFamily: "Chelsea Market",
+                    fontSize: 30,
+                    align: "center"
+                  }
+                )
+                .setScrollFactor(0);
+              setTimeout(() => {
+                image.destroy();
+                text.destroy();
+              }, 3000);
+            } else {
+              window.alert("Pussy");
+            }
+          }
+        });
+
+        inputOneText = "";
+        statis2 = false;
+      }
+    });
+    let counter = 0;
+    let statis = true;
+    this.physics.add.collider(player, chestTwo, () => {
+      if (statis) {
+        this.input.keyboard.on("keyup", function(k) {
+          if (k.key === "e") {
+            inputOneText = window.prompt("Hint : 1001", "Type in your Answer");
+            console.log(inputOneText);
+            if (inputOneText.toUpperCase() === "RUUN") {
+              let image = _this.add
+                .image(0, 0, "Background")
+                .setOrigin(0, 0)
+                .setScrollFactor(0);
+
+              let text = _this.add
+                .text(
+                  300,
+                  250,
+                  "I don't know why, but when I read RUUN in backwards \nit sounded familiar.",
+                  {
+                    fontFamily: "Chelsea Market",
+                    fontSize: 30,
+                    align: "center"
+                  }
+                )
+                .setScrollFactor(0);
+              setTimeout(() => {
+                image.destroy();
+                text.destroy();
+              }, 3000);
+            } else {
+              window.alert("Pussy");
+            }
+          }
+        });
+
+        inputOneText = "";
+        statis = false;
       }
     });
   }
@@ -352,11 +529,11 @@ class LevelTwo extends Phaser.Scene {
     }
     playerX = player.x;
     playerY = player.y;
-    if (playerX < 1600) {
-      levelOne = false;
-      levelTwo = false;
-      levelThree = true;
-      this.scene.start("NewGameScene");
-    }
   }
 }
+// let inputOne = _this.add
+//             .text(520, 300, inputOneText, {
+//               fontFamily: "Chelsea Market",
+//               fontSize: 100
+//             })
+//             .setScrollFactor(0);

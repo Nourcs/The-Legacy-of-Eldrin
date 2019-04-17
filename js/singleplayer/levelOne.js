@@ -7,8 +7,10 @@ let healthTxt;
 let scoreTxt;
 let score = 0;
 let health = 100;
-let playerX = 1900;
-let playerY = 500;
+let playerX = 520;
+let playerY = 100;
+// let playerX = 2200;
+// let playerY = 1200;
 class LevelOne extends Phaser.Scene {
   constructor() {
     super({ key: "LevelOne", active: false });
@@ -26,6 +28,8 @@ class LevelOne extends Phaser.Scene {
     this.load.image("Tree", "././assets/game/background/Tree.png");
     this.load.image("Tree1", "././assets/game/background/Tree1.png");
     this.load.image("Tree2", "././assets/game/background/Tree2.png");
+    this.load.image("Tree3", "././assets/game/background/Tree3.png");
+    this.load.image("Tree4", "././assets/game/background/Tree4.png");
     this.load.image("House", "././assets/game/background/House.png");
     this.load.image("House1", "././assets/game/background/House1.png");
     this.load.image("House2", "././assets/game/background/House2.png");
@@ -45,7 +49,12 @@ class LevelOne extends Phaser.Scene {
     this.load.image("item", "././assets/game/background/Item.png");
 
     this.load.image("WaterLeft", "././assets/game/background/WaterLeft.png");
-
+    for (let i = 1; i < 4; i++) {
+      this.load.image(
+        `monster${i}`,
+        `././assets/game/background/Monster${i}.png`
+      );
+    }
     this.load.image(
       "WaterBottom",
       "././assets/game/background/WaterBottom.png"
