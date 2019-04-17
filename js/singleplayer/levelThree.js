@@ -401,6 +401,7 @@ class LevelThree extends Phaser.Scene {
         status = true;
       }
     });
+
     let statis2 = true;
     this.physics.add.collider(player, chestOne, () => {
       if (statis2) {
