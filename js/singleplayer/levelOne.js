@@ -47,7 +47,7 @@ class LevelOne extends Phaser.Scene {
     this.load.image("Bushes", "././assets/game/background/Bushes.png");
     this.load.image("Bushes1", "././assets/game/background/Bushes1.png");
     this.load.image("RedTree", "././assets/game/background/RedTree.png");
-    this.load.image("item", "././assets/game/background/Item.png");
+    this.load.image("item", "././assets/game/background/item.png");
 
     this.load.image("WaterLeft", "././assets/game/background/WaterLeft.png");
     for (let i = 1; i < 4; i++) {
