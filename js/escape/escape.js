@@ -61,8 +61,12 @@ class EscapeScene extends Phaser.Scene {
         document.body.style.cursor = "auto";
         // _this.scene.resume("MenuScene");
         // _this.scene.start("MenuScene");
+        _this.scene.stop("EscapeScene");
         _this.scene.stop("NewGameScene");
-        _this.scene.start("MenuScene");
+
+        _this.scene.stop("SPScene");
+
+        // _this.scene.s("MenuScene");
       });
   }
 }

@@ -5,12 +5,13 @@ let camera;
 var keyObj;
 let healthTxt;
 let scoreTxt;
+let playerX = 2000;
+let playerY = 1100;
 let score = 0;
 let health = 100;
-let playerX = 520;
-let playerY = 100;
-// let playerX = 2200;
-// let playerY = 1200;
+let footsteps;
+let coins;
+
 class LevelOne extends Phaser.Scene {
   constructor() {
     super({ key: "LevelOne", active: false });
@@ -59,10 +60,49 @@ class LevelOne extends Phaser.Scene {
       "WaterBottom",
       "././assets/game/background/WaterBottom.png"
     );
+
+    this.load.audio(
+      "soundeffect1",
+      "././assets/game/background/SoundEffect1.wav"
+    );
+    this.load.audio("Footsteps", "././assets/game/background/Footsteps.wav");
+    this.load.audio("Coins", "././assets/game/background/Coins.wav");
   }
 
   create() {
-    console.log(this);
+    settings = retrieveData();
+    settings.continue.levelOne = true;
+    settings.continue.levelTwo = false;
+    settings.continue.playerX = playerX;
+    settings.continue.playerY = playerY;
+    settings.continue.score = score;
+    settings.continue.health = health;
+    localStorage.setItem("settings", JSON.stringify(settings));
+    if (newGamer) {
+      console.log("New GMETr");
+      playerX = 2000;
+      playerY = 1100;
+      score = 0;
+      health = 100;
+    } else if (continuer) {
+      console.log("Continerer");
+      playerX = settings.continue.playerX;
+      playerY = settings.continue.playerY;
+      score = settings.continue.score;
+      health = settings.continue.health;
+    }
+    let soundEffectOne = this.sound.add("soundeffect1");
+    footsteps = this.sound.add("Footsteps");
+    coins = this.sound.add("Coins");
+
+    footsteps.play({
+      volume: 0.5,
+      loop: true
+    });
+    soundEffectOne.play({
+      volume: 1,
+      loop: true
+    });
     camera = this.cameras.main;
     camera.setViewport(0, 0, window.innerWidth, window.innerHeight);
     this.add.tileSprite(0, 0, 3000, 1500, "Grass").setOrigin(0, 0);
@@ -210,6 +250,10 @@ class LevelOne extends Phaser.Scene {
             function(k) {
               if (k.key === "e" && hiddenItems[i][1].clicked === false) {
                 e.destroy();
+                coins.play({
+                  volume: 0.5,
+                  loop: false
+                });
                 score += 10;
                 console.log(score);
                 scoreTxt.destroy();
@@ -244,24 +288,37 @@ class LevelOne extends Phaser.Scene {
     if (cursors.left.isDown) {
       player.setVelocityX(-100);
       player.anims.play("left", true);
+      footsteps.resume();
     } else if (cursors.right.isDown) {
       player.setVelocityX(100);
 
       player.anims.play("right", true);
+      footsteps.resume();
     } else if (cursors.up.isDown) {
       player.anims.play("up", true);
       player.setVelocityY(-100);
+      footsteps.resume();
     } else if (cursors.down.isDown) {
       player.anims.play("down", true);
       player.setVelocityY(100);
+      footsteps.resume();
     } else {
       player.anims.stop();
+      footsteps.pause();
     }
     playerX = player.x;
     playerY = player.y;
     if (score === 100) {
       levelOne = false;
       levelTwo = true;
+      footsteps.pause();
+      settings.continue.levelOne = false;
+      settings.continue.levelTwo = true;
+      settings.continue.playerX = playerX;
+      settings.continue.playerY = playerY;
+      settings.continue.score = score;
+      settings.continue.health = health;
+      localStorage.setItem("settings", JSON.stringify(settings));
       this.scene.start("NewGameScene");
     }
     // player.anims.play("up");

@@ -1,5 +1,13 @@
 let path;
 let status = false;
+let scream;
+let soundEffect2;
+let left = false;
+let right = false;
+let up = false;
+let down = false;
+let sword;
+
 class LevelTwo extends Phaser.Scene {
   constructor() {
     super({ key: "LevelTwo", active: false });
@@ -13,7 +21,42 @@ class LevelTwo extends Phaser.Scene {
 
       spacing: 28.5
     });
-
+    this.load.spritesheet(
+      "EldrinAttackUp",
+      "././assets/sprites/EldrinAttackUp.png",
+      {
+        frameWidth: 45,
+        frameHeight: 45,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackLeft",
+      "././assets/sprites/EldrinAttackLeft.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackDown",
+      "././assets/sprites/EldrinAttackDown.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackRight",
+      "././assets/sprites/EldrinAttackRight.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
     this.load.image("Tree", "././assets/game/background/Tree.png");
     this.load.image("Tree1", "././assets/game/background/Tree1.png");
     this.load.image("Tree2", "././assets/game/background/Tree2.png");
@@ -50,13 +93,47 @@ class LevelTwo extends Phaser.Scene {
       "WaterBottom",
       "././assets/game/background/WaterBottom.png"
     );
+    this.load.audio("Footsteps", "././assets/game/background/Footsteps.wav");
+    this.load.audio("Coins", "././assets/game/background/Coins.wav");
+    this.load.audio("Scream", "././assets/game/background/Scream.wav");
+    this.load.audio(
+      "SoundEffect2",
+      "././assets/game/background/SoundEffect2.wav"
+    );
+
+    this.load.audio("Sword", "././assets/game/background/Sword.wav");
   }
 
   create() {
+    settings = retrieveData();
+    if (continuer) {
+      playerX = settings.continue.playerX;
+      playerY = settings.continue.playerY;
+      score = settings.continue.score;
+      health = settings.continue.health;
+    }
     camera = this.cameras.main;
     camera.setViewport(0, 0, window.innerWidth, window.innerHeight);
     this.add.tileSprite(0, 0, 3000, 1500, "Grass").setOrigin(0, 0);
-
+    scream = this.sound.add("Scream");
+    coins = this.sound.add("Coins");
+    sword = this.sound.add("Sword");
+    soundEffect2 = this.sound.add("SoundEffect2");
+    soundEffect2.play({
+      volume: 0.2,
+      loop: true,
+      seek: 10
+    });
+    soundEffect2.pause();
+    footsteps = this.sound.add("Footsteps");
+    footsteps.play({
+      volume: 0.5,
+      loop: true
+    });
+    sword.play({
+      volume: 0.5,
+      loop: true
+    });
     let water = this.physics.add.staticGroup();
     let trees = this.physics.add.staticGroup();
     path = this.physics.add.staticGroup();
@@ -249,6 +326,43 @@ class LevelTwo extends Phaser.Scene {
       frameRate: 15,
       repeat: -1
     });
+    this.anims.create({
+      key: "upAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackUp", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "leftAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackLeft", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "downAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackDown", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "rightAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackRight", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+
     this.physics.add.collider(player, water);
     this.physics.add.collider(player, trees);
 
@@ -263,7 +377,7 @@ class LevelTwo extends Phaser.Scene {
 
     healthTxt.setScrollFactor(0);
     scoreTxt.setScrollFactor(0);
-    console.log(trees[9]);
+    // console.log(trees[9]);
     player.anims.play("left", true);
     player.anims.stop();
     let state = true;
@@ -277,7 +391,12 @@ class LevelTwo extends Phaser.Scene {
             "keyup",
             function(k) {
               if (k.key === " " && !clicked) {
+                coins.play({
+                  volume: 0.5,
+                  loop: false
+                });
                 redTree.destroy();
+
                 score += 100;
                 scoreTxt.destroy();
                 scoreTxt = this.add.text(30, 60, `Score : ${score}`, {
@@ -300,6 +419,7 @@ class LevelTwo extends Phaser.Scene {
     this.physics.add.overlap(path, player, e => {
       if (e) {
         // console.log("Touched");
+        soundEffect2.resume();
         status = true;
       }
     });
@@ -307,7 +427,7 @@ class LevelTwo extends Phaser.Scene {
 
   update() {
     cursors = this.input.keyboard.createCursorKeys();
-    keyObj = this.input.keyboard.addKey("E");
+    // keyObj = this.input.keyboard.addKey("E");
     player.setVelocityY(0);
     player.setVelocityX(0);
     if (
@@ -317,6 +437,11 @@ class LevelTwo extends Phaser.Scene {
       player.x > 1600
     ) {
       if (health > 0) {
+        scream.play({
+          volume: 0.5,
+          loop: false,
+          rate: 2
+        });
         health--;
         healthTxt.destroy();
         healthTxt = this.add.text(30, 30, `Health : ${health}`, {
@@ -336,18 +461,50 @@ class LevelTwo extends Phaser.Scene {
     status = false;
 
     if (cursors.left.isDown) {
+      left = true;
       player.setVelocityX(-100);
       player.anims.play("left", true);
+      footsteps.resume();
     } else if (cursors.right.isDown) {
+      right = true;
       player.setVelocityX(100);
       player.anims.play("right", true);
+      footsteps.resume();
     } else if (cursors.up.isDown) {
+      up = true;
       player.anims.play("up", true);
       player.setVelocityY(-100);
+      footsteps.resume();
     } else if (cursors.down.isDown) {
+      down = true;
       player.anims.play("down", true);
       player.setVelocityY(100);
+      footsteps.resume();
+    } else if (cursors.space.isDown) {
+      console.log("asnouja");
+      if (up) {
+        player.anims.play("upAttack", true);
+        sword.resume();
+
+        up = false;
+      } else if (down) {
+        player.anims.play("downAttack", true);
+        sword.resume();
+
+        down = false;
+      } else if (left) {
+        player.anims.play("leftAttack", true);
+        sword.resume();
+
+        left = false;
+      } else if (right) player.anims.play("rightAttack", true);
+      sword.resume();
+
+      right = false;
+      // player.anims.play("rightAttack", true);
     } else {
+      footsteps.pause();
+      sword.pause();
       player.anims.stop();
     }
     playerX = player.x;
@@ -356,6 +513,16 @@ class LevelTwo extends Phaser.Scene {
       levelOne = false;
       levelTwo = false;
       levelThree = true;
+      footsteps.pause();
+      soundEffect2.stop();
+      settings.continue.levelOne = false;
+      settings.continue.levelTwo = false;
+      settings.continue.levelThree = true;
+      settings.continue.playerX = playerX;
+      settings.continue.playerY = playerY;
+      settings.continue.score = score;
+      settings.continue.health = health;
+      localStorage.setItem("settings", JSON.stringify(settings));
       this.scene.start("NewGameScene");
     }
   }

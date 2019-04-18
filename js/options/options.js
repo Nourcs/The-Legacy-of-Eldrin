@@ -6,9 +6,11 @@ class OptionsScene extends Phaser.Scene {
   }
   preload() {
     loadBlurredBg(this);
+    this.load.audio("MainMusic", "./assets/game/background/MainMusic.mp3");
   }
 
   create() {
+    settings = retrieveData();
     sharedBlurredBg(this);
     let applyBtn = applyButton(this);
     let plusBtns = [];
@@ -56,12 +58,10 @@ class OptionsScene extends Phaser.Scene {
       })
     );
 
-    let settings = retrieveData();
-
-    let mmV = settings.options.mainMusic;
+    let mmV = settings.options.mainMusic * 5;
     let seV = settings.options.soundEffects;
     let cV = settings.contrast * 10 * 2;
-    let mainMusic = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
+    let mainMusicc = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
       fontFamily: "Chelsea Market",
       fontSize: 30
     });
@@ -111,8 +111,8 @@ class OptionsScene extends Phaser.Scene {
             for (let i = 0; i < cV; i++) {
               graphics.fillRectShape(rectangles3[i]);
             }
-            mainMusic.destroy();
-            mainMusic = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
+            mainMusicc.destroy();
+            mainMusicc = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
               fontFamily: "Chelsea Market",
               fontSize: 30
             });
@@ -149,8 +149,8 @@ class OptionsScene extends Phaser.Scene {
             for (let i = 0; i < cV; i++) {
               graphics.fillRectShape(rectangles3[i]);
             }
-            mainMusic.destroy();
-            mainMusic = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
+            mainMusicc.destroy();
+            mainMusicc = this.add.text(570, 100, `Main Music : ${mmV * 10}%`, {
               fontFamily: "Chelsea Market",
               fontSize: 30
             });
@@ -372,7 +372,8 @@ class OptionsScene extends Phaser.Scene {
     applyBtn.setInteractive().on(
       "pointerdown",
       function() {
-        settings.options.mainMusic = mmV;
+        settings.options.mainMusic = mmV / 5;
+        mainMusic.setVolume(mmV / 5);
         settings.options.soundEffects = seV;
         settings.contrast = cV / 20;
         localStorage.setItem("settings", JSON.stringify(settings));

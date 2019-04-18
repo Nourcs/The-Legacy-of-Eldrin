@@ -1,6 +1,6 @@
-let levelOne = false;
+let levelOne = true;
 let levelTwo = false;
-let levelThree = true;
+let levelThree = false;
 let levelThreeHintOne = false;
 let levelThreeHintTwo = false;
 let levelThreeHintThree = false;
@@ -16,24 +16,40 @@ class NewGameScene extends Phaser.Scene {
     ); // Load the background image
   }
   create() {
+    settings = retrieveData();
+    if (continuer) {
+      levelOne = settings.continue.levelOne;
+      levelTwo = settings.continue.levelTwo;
+      levelThree = settings.continue.levelThree;
+      levelThreeHintOne = settings.continue.levelThreeHintOne;
+      levelThreeHintTwo = settings.continue.levelThreeHintTwo;
+      levelThreeHintThree = settings.continue.levelThreeHintThree;
+    }
+
+    let volume = settings.options.mainMusic;
+    setInterval(() => {
+      if (volume > 0.03) {
+        volume -= 0.001;
+        mainMusic.setVolume(volume);
+      }
+    }, 1.5);
     let _this = this;
     this.input.keyboard.on("keydown", function(e) {
       if (e.key === "Escape") {
-        // _this.scene.run("EscapeScene");
         _this.scene.switch("EscapeScene");
       }
     });
     let background = this.add.image(0, 0, "optionsBackground").setOrigin(0, 0); // Draw Options background
     if (levelOne) {
       let txt = "Find the Hidden Items!";
-      this.add.text(50, 50, "Level 1", {
+      this.add.text(30, 30, "Level 1", {
         fontFamily: "Chelsea Market",
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
-          fontSize: 3
+          fontSize: 35
         });
 
         contin.alpha = 0.5;
@@ -65,10 +81,15 @@ class NewGameScene extends Phaser.Scene {
           callback: () => {
             if (jj > 0) boston.destroy();
             texte += txt[jj];
-            boston = thisC.add.text(450, 500, texte, {
-              fontFamily: "Chelsea Market",
-              fontSize: 40
-            });
+            boston = thisC.add.text(
+              window.innerWidth / 2 - window.innerWidth / 6,
+              500,
+              texte,
+              {
+                fontFamily: "Chelsea Market",
+                fontSize: 40
+              }
+            );
             jj++;
           },
           //args: [],
@@ -83,7 +104,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -134,7 +155,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -186,7 +207,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -239,7 +260,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });
@@ -292,7 +313,7 @@ class NewGameScene extends Phaser.Scene {
         fontSize: 35
       });
       this.time.delayedCall(3200, () => {
-        let contin = this.add.text(window.innerWidth - 350, 560, "Continue", {
+        let contin = this.add.text(window.innerWidth - 200, 560, "Continue", {
           fontFamily: "Chelsea Market",
           fontSize: 35
         });

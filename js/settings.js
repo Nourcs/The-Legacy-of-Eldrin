@@ -1,7 +1,29 @@
 let defaultSettings = {
-  firstGame: true,
+  newGame: {
+    levelOne: true,
+    levelTwo: false,
+    levelThree: false,
+    levelThreeHintOne: false,
+    levelThreeHintTwo: false,
+    levelThreeHintThree: false
+  },
+
+  health: 100,
+  score: 0,
+  continue: {
+    levelOne: true,
+    levelTwo: false,
+    levelThree: false,
+    levelThreeHintOne: false,
+    levelThreeHintTwo: false,
+    levelThreeHintThree: false,
+    playerX: 2000,
+    playerY: 1100,
+    health: 100,
+    score: 0
+  },
   options: {
-    mainMusic: 10,
+    mainMusic: 2,
     soundEffects: 10
   },
   skins: {

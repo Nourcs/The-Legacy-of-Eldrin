@@ -1,3 +1,6 @@
+let newGamer = false;
+let continuer = false;
+
 function sharedBlurredBg(thisComponent) {
   let background = thisComponent.add
     .image(0, 0, "optionsBackground")
@@ -29,14 +32,15 @@ function sharedBlurredBg(thisComponent) {
       function(e) {
         document.body.style.cursor = "auto";
 
-        thisComponent.scene.start("MenuScene");
+        thisComponent.scene.stop(thisComponent);
       },
       thisComponent
     ); // Go back to the Main Menu Scene when clicking on the Back Button
 
   thisComponent.input.keyboard.on("keydown", function(e) {
     if (e.key === "Escape") {
-      thisComponent.scene.start("MenuScene");
+      // thisComponent.scene.switch("MenuScene");
+      thisComponent.scene.stop(thisComponent);
     }
   });
 }

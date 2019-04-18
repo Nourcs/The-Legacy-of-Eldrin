@@ -1,4 +1,10 @@
 status = false;
+left = false;
+right = false;
+up = false;
+down = false;
+score = 0;
+health = 100;
 let inputOneStatus = false;
 let inputOneText = "";
 class LevelThree extends Phaser.Scene {
@@ -18,7 +24,42 @@ class LevelThree extends Phaser.Scene {
       frameHeight: 44,
       spacing: 28.5
     });
-
+    this.load.spritesheet(
+      "EldrinAttackUp",
+      "././assets/sprites/EldrinAttackUp.png",
+      {
+        frameWidth: 45,
+        frameHeight: 45,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackLeft",
+      "././assets/sprites/EldrinAttackLeft.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackDown",
+      "././assets/sprites/EldrinAttackDown.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
+    this.load.spritesheet(
+      "EldrinAttackRight",
+      "././assets/sprites/EldrinAttackRight.png",
+      {
+        frameWidth: 45,
+        frameHeight: 44,
+        spacing: 127
+      }
+    );
     this.load.image("Tree", "././assets/game/background/Tree.png");
     this.load.image("Tree1", "././assets/game/background/Tree1.png");
     this.load.image("Tree2", "././assets/game/background/Tree2.png");
@@ -57,11 +98,35 @@ class LevelThree extends Phaser.Scene {
       "WaterBottom",
       "././assets/game/background/WaterBottom.png"
     );
+    this.load.audio("Footsteps", "././assets/game/background/Footsteps.wav");
+    this.load.audio("Scream", "././assets/game/background/Scream.wav");
+    this.load.audio("Coins", "././assets/game/background/Coins.wav");
+    this.load.audio("Sword", "././assets/game/background/Sword.wav");
   }
 
   create() {
+    settings = retrieveData();
+    if (continuer) {
+      playerX = settings.continue.playerX;
+      playerY = settings.continue.playerY;
+      score = settings.continue.score;
+      health = settings.continue.health;
+    }
     camera = this.cameras.main;
     camera.setViewport(0, 0, window.innerWidth, window.innerHeight);
+    scream = this.sound.add("Scream");
+    coins = this.sound.add("Coins");
+    sword = this.sound.add("Sword");
+
+    footsteps = this.sound.add("Footsteps");
+    footsteps.play({
+      volume: 0.5,
+      loop: true
+    });
+    sword.play({
+      volume: 0.5,
+      loop: true
+    });
     this.add.tileSprite(0, 0, 3000, 1500, "Grass").setOrigin(0, 0);
     let _this = this;
     let water = this.physics.add.staticGroup();
@@ -241,21 +306,24 @@ class LevelThree extends Phaser.Scene {
         .staticImage(1200, 235, "monster3")
         .setOrigin(0, 0)
         .refreshBody(),
-      false
+      false,
+      0
     ]);
     monsters.push([
       this.physics.add
         .staticImage(300, 1000, "monster3")
         .setOrigin(0, 0)
         .refreshBody(),
-      false
+      false,
+      0
     ]);
     monsters.push([
       this.physics.add
         .staticImage(1000, 1270, "monster1")
         .setOrigin(0, 0)
         .refreshBody(),
-      false
+      false,
+      0
     ]);
     let chestOne = this.physics.add
       .staticImage(240, 5, "chest")
@@ -298,51 +366,144 @@ class LevelThree extends Phaser.Scene {
       frameRate: 15,
       repeat: -1
     });
+    this.anims.create({
+      key: "upAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackUp", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "leftAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackLeft", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "downAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackDown", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "rightAttack",
+      frames: this.anims.generateFrameNumbers("EldrinAttackRight", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 15,
+      repeat: -1
+    });
+
     this.physics.add.collider(player, water);
     this.physics.add.collider(player, trees);
+
+    let toucher = false;
+
     for (let i = 0; i < 3; i++) {
       this.physics.add.collider(player, monsters[i][0], () => {
+        toucher = true;
         this.input.keyboard.on(
           "keyup",
           function(k) {
-            if (k.key === " " && monsters[i][1] === false) {
-              monsters[i][0].destroy();
-              score += 100;
-              scoreTxt.destroy();
-              scoreTxt = this.add.text(30, 60, `Score : ${score}`, {
-                fontFamily: "Chelsea Market",
-                fontSize: 25
-              });
-              scoreTxt.setScrollFactor(0);
+            if (k.key === " " && monsters[i][1] === false && toucher) {
+              console.log(monsters[i][2]);
+              if (monsters[i][2] === 10) {
+                monsters[i][0].destroy();
+                coins.play({
+                  volume: 0.5,
+                  loop: false
+                });
+                score += 100;
+                scoreTxt.destroy();
+                scoreTxt = this.add.text(30, 60, `Score : ${score}`, {
+                  fontFamily: "Chelsea Market",
+                  fontSize: 25
+                });
+                scoreTxt.setScrollFactor(0);
 
-              monsters[i][1] = true;
-              if (i === 0) {
-                levelOne = false;
-                levelTwo = false;
-                levelThree = false;
-                levelThreeHintOne = true;
-                levelThreeHintTwo = false;
-                levelThreeHintThree = false;
-                _this.scene.switch("NewGameScene");
-              } else if (i === 1) {
-                levelOne = false;
-                levelTwo = false;
-                levelThree = false;
-                levelThreeHintOne = false;
-                levelThreeHintTwo = true;
-                levelThreeHintThree = false;
-
-                _this.scene.switch("NewGameScene");
-              } else if (i === 2) {
-                levelOne = false;
-                levelTwo = false;
-                levelThree = false;
-                levelThreeHintOne = false;
-                levelThreeHintTwo = false;
-                levelThreeHintThree = true;
-
-                _this.scene.switch("NewGameScene");
+                monsters[i][1] = true;
+                if (i === 0) {
+                  levelOne = false;
+                  levelTwo = false;
+                  levelThree = false;
+                  levelThreeHintOne = true;
+                  levelThreeHintTwo = false;
+                  levelThreeHintThree = false;
+                  settings.continue.levelOne = false;
+                  settings.continue.levelTwo = false;
+                  settings.continue.levelThree = false;
+                  settings.continue.levelThreeHintOne = true;
+                  settings.continue.levelThreeHintTwo = false;
+                  settings.continue.levelThreeHintThree = false;
+                  settings.continue.playerX = playerX;
+                  settings.continue.playerY = playerY;
+                  settings.continue.score = score;
+                  settings.continue.health = health;
+                  localStorage.setItem("settings", JSON.stringify(settings));
+                  sword.pause();
+                  footsteps.pause();
+                  _this.scene.switch("NewGameScene");
+                } else if (i === 1) {
+                  levelOne = false;
+                  levelTwo = false;
+                  levelThree = false;
+                  levelThreeHintOne = false;
+                  levelThreeHintTwo = true;
+                  levelThreeHintThree = false;
+                  settings.continue.levelOne = false;
+                  settings.continue.levelTwo = false;
+                  settings.continue.levelThree = false;
+                  settings.continue.levelThreeHintOne = false;
+                  settings.continue.levelThreeHintTwo = true;
+                  settings.continue.levelThreeHintThree = false;
+                  settings.continue.playerX = playerX;
+                  settings.continue.playerY = playerY;
+                  settings.continue.score = score;
+                  settings.continue.health = health;
+                  localStorage.setItem("settings", JSON.stringify(settings));
+                  sword.pause();
+                  footsteps.pause();
+                  _this.scene.switch("NewGameScene");
+                } else if (i === 2) {
+                  levelOne = false;
+                  levelTwo = false;
+                  levelThree = false;
+                  levelThreeHintOne = false;
+                  levelThreeHintTwo = false;
+                  levelThreeHintThree = true;
+                  settings.continue.levelOne = false;
+                  settings.continue.levelTwo = false;
+                  settings.continue.levelThree = false;
+                  settings.continue.levelThreeHintOne = false;
+                  settings.continue.levelThreeHintTwo = false;
+                  settings.continue.levelThreeHintThree = true;
+                  settings.continue.playerX = playerX;
+                  settings.continue.playerY = playerY;
+                  settings.continue.score = score;
+                  settings.continue.health = health;
+                  localStorage.setItem("settings", JSON.stringify(settings));
+                  sword.pause();
+                  footsteps.pause();
+                  _this.scene.switch("NewGameScene");
+                }
+              } else {
+                monsters[i][2]++;
               }
+              if (i !== 2) {
+                player.x--;
+              } else {
+                player.x++;
+              }
+              toucher = false;
             }
           },
           this
@@ -402,88 +563,86 @@ class LevelThree extends Phaser.Scene {
       }
     });
 
-    let statis2 = true;
-    this.physics.add.collider(player, chestOne, () => {
-      if (statis2) {
-        this.input.keyboard.on("keyup", function(k) {
-          if (k.key === "e") {
-            inputOneText = window.prompt("Hint : 1001", "Type in your Answer");
-            console.log(inputOneText);
-            if (inputOneText.toUpperCase() === "RUUN") {
-              let image = _this.add
-                .image(0, 0, "Background")
-                .setOrigin(0, 0)
-                .setScrollFactor(0);
+    let touching = false;
+    this.physics.add.collider(player, chestOne, e => {
+      touching = true;
+      this.input.keyboard.on("keyup", function(k) {
+        if (k.key === "e" && touching) {
+          inputOneText = window.prompt(
+            "Say my name to open your third eye and be able to see me."
+          );
+          if (inputOneText.toUpperCase() === "NUUR") {
+            let image = _this.add
+              .image(0, 0, "Background")
+              .setOrigin(0, 0)
+              .setScrollFactor(0);
 
-              let text = _this.add
-                .text(
-                  300,
-                  250,
-                  "I don't know why, but when I read RUUN in backwards \nit sounded familiar.",
-                  {
-                    fontFamily: "Chelsea Market",
-                    fontSize: 30,
-                    align: "center"
-                  }
-                )
-                .setScrollFactor(0);
-              setTimeout(() => {
-                image.destroy();
-                text.destroy();
-              }, 3000);
-            } else {
-              window.alert("Pussy");
-            }
+            let text = _this.add
+              .text(450, 250, "To Be Continued", {
+                fontFamily: "Chelsea Market",
+                fontSize: 50,
+                align: "center"
+              })
+              .setScrollFactor(0);
+            setTimeout(() => {
+              image.destroy();
+              text.destroy();
+              _this.scene.stop("LevelOne");
+              _this.scene.stop("LevelTwo");
+              _this.scene.stop("LevelThree");
+              _this.scene.stop("NewGameScene");
+
+              _this.scene.switch("MenuScene");
+            }, 3000);
+          } else {
+            inputOneText = "";
+            window.alert("Try Again!");
           }
-        });
-
-        inputOneText = "";
-        statis2 = false;
-      }
+          touching = false;
+        }
+      });
     });
-    let counter = 0;
-    let statis = true;
-    this.physics.add.collider(player, chestTwo, () => {
-      if (statis) {
-        this.input.keyboard.on("keyup", function(k) {
-          if (k.key === "e") {
-            inputOneText = window.prompt("Hint : 1001", "Type in your Answer");
-            console.log(inputOneText);
-            if (inputOneText.toUpperCase() === "RUUN") {
-              let image = _this.add
-                .image(0, 0, "Background")
-                .setOrigin(0, 0)
-                .setScrollFactor(0);
+    let touching1 = false;
+    this.physics.add.collider(player, chestTwo, e => {
+      touching1 = true;
+      this.input.keyboard.on("keyup", function(k) {
+        if (k.key === "e" && touching1) {
+          inputOneText = window.prompt("Hint : 1001", "Type in your Answer.");
+          if (inputOneText.toUpperCase() === "RUUN") {
+            let image = _this.add
+              .image(0, 0, "Background")
+              .setOrigin(0, 0)
+              .setScrollFactor(0);
 
-              let text = _this.add
-                .text(
-                  300,
-                  250,
-                  "I don't know why, but when I read RUUN in backwards \nit sounded familiar.",
-                  {
-                    fontFamily: "Chelsea Market",
-                    fontSize: 30,
-                    align: "center"
-                  }
-                )
-                .setScrollFactor(0);
-              setTimeout(() => {
-                image.destroy();
-                text.destroy();
-              }, 3000);
-            } else {
-              window.alert("Pussy");
-            }
+            let text = _this.add
+              .text(
+                300,
+                250,
+                "I don't know why, but when I read RUUN in backwards \nit sounded familiar.",
+                {
+                  fontFamily: "Chelsea Market",
+                  fontSize: 30,
+                  align: "center"
+                }
+              )
+              .setScrollFactor(0);
+            setTimeout(() => {
+              image.destroy();
+              text.destroy();
+            }, 3000);
+          } else {
+            inputOneText = "";
+            window.alert("Try Again!");
           }
-        });
-
-        inputOneText = "";
-        statis = false;
-      }
+          touching1 = false;
+        }
+      });
     });
   }
 
   update() {
+    this.input.keyboard.enabled = true;
+
     cursors = this.input.keyboard.createCursorKeys();
     keyObj = this.input.keyboard.addKey("E");
     player.setVelocityY(0);
@@ -495,6 +654,11 @@ class LevelThree extends Phaser.Scene {
       player.x > 1600
     ) {
       if (health > 0) {
+        scream.play({
+          volume: 0.5,
+          loop: false,
+          rate: 2
+        });
         health--;
         healthTxt.destroy();
         healthTxt = this.add.text(30, 30, `Health : ${health}`, {
@@ -514,18 +678,46 @@ class LevelThree extends Phaser.Scene {
     status = false;
 
     if (cursors.left.isDown) {
+      left = true;
       player.setVelocityX(-100);
       player.anims.play("left", true);
+      footsteps.resume();
     } else if (cursors.right.isDown) {
+      right = true;
       player.setVelocityX(100);
       player.anims.play("right", true);
+      footsteps.resume();
     } else if (cursors.up.isDown) {
+      up = true;
       player.anims.play("up", true);
       player.setVelocityY(-100);
+      footsteps.resume();
     } else if (cursors.down.isDown) {
+      down = true;
       player.anims.play("down", true);
       player.setVelocityY(100);
+      footsteps.resume();
+    } else if (cursors.space.isDown) {
+      console.log("asnouja");
+      if (up) {
+        player.anims.play("upAttack", true);
+        sword.resume();
+        up = false;
+      } else if (down) {
+        player.anims.play("downAttack", true);
+        sword.resume();
+        down = false;
+      } else if (left) {
+        player.anims.play("leftAttack", true);
+        sword.resume();
+        left = false;
+      } else if (right) player.anims.play("rightAttack", true);
+      sword.resume();
+      right = false;
+      // player.anims.play("rightAttack", true);
     } else {
+      footsteps.pause();
+      sword.pause();
       player.anims.stop();
     }
     playerX = player.x;

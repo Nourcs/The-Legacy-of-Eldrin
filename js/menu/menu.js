@@ -1,6 +1,11 @@
+let mainMusic;
+let mainVolume = 1;
+
+let settings = retrieveData();
+
 class MenuScene extends Phaser.Scene {
   constructor() {
-    super({ key: "MenuScene", active: true });
+    super({ key: "MenuScene", visible: false });
   }
   preload() {
     this.load.image(
@@ -8,27 +13,27 @@ class MenuScene extends Phaser.Scene {
       "./assets/menu/background/background.jpg"
       // Load the background image
     );
+    this.load.audio("MainMusic", "./assets/game/background/MainMusic.mp3");
 
     // this.scene.prel();
   }
   create() {
+    mainMusic = this.sound.add("MainMusic");
+    mainMusic.play({
+      volume: settings.options.mainMusic,
+      loop: true
+    });
+
     let background = this.add.image(0, 0, "menuBackground").setOrigin(0, 0); // Draw Main Menu background
     let menuBtns = []; // Create Array of Buttons
     let menuBtnsPosX = 50; // Define x position of the buttons
 
     menuBtns.push(
-      this.add.text(menuBtnsPosX, 100, "Single Player", {
+      this.add.text(menuBtnsPosX, 170, "Single Player", {
         fontFamily: "Chelsea Market",
         fontSize: 40
       })
     ); // Add Single Player Button
-
-    menuBtns.push(
-      this.add.text(menuBtnsPosX, 170, "Multiplayer", {
-        fontFamily: "Chelsea Market",
-        fontSize: 40
-      })
-    ); // Add Multiplayer Button
 
     menuBtns.push(
       this.add.text(menuBtnsPosX, 240, "Options", {
@@ -75,15 +80,17 @@ class MenuScene extends Phaser.Scene {
         "pointerdown",
         function(e) {
           document.body.style.cursor = "auto";
-          this.scene.start("SPScene");
+          this.scene.launch("SPScene");
+          // this.scene.stop("MenuScene");
         },
         this
       ); // Start Options Scene when clicking on Options Button
+
       menuBtns[1].on(
         "pointerdown",
         function(e) {
           document.body.style.cursor = "auto";
-          this.scene.start("MPScene");
+          this.scene.launch("OptionsScene");
         },
         this
       ); // Start Options Scene when clicking on Options Button
@@ -91,7 +98,7 @@ class MenuScene extends Phaser.Scene {
         "pointerdown",
         function(e) {
           document.body.style.cursor = "auto";
-          this.scene.start("OptionsScene");
+          this.scene.launch("SkinsScene");
         },
         this
       ); // Start Options Scene when clicking on Options Button
@@ -99,19 +106,11 @@ class MenuScene extends Phaser.Scene {
         "pointerdown",
         function(e) {
           document.body.style.cursor = "auto";
-          this.scene.start("SkinsScene");
+          this.scene.launch("CreditsScene");
         },
         this
       ); // Start Options Scene when clicking on Options Button
-      menuBtns[4].on(
-        "pointerdown",
-        function(e) {
-          document.body.style.cursor = "auto";
-          this.scene.start("CreditsScene");
-        },
-        this
-      ); // Start Options Scene when clicking on Options Button
-      menuBtns[5].on("pointerdown", function() {
+      menuBtns[4].on("pointerdown", function() {
         window.close();
       }); // Start Options Scene when clicking on Options Button
     }

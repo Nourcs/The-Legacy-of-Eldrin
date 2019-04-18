@@ -39,7 +39,12 @@ class SPScene extends Phaser.Scene {
 
     spBtns[0].on("pointerdown", function() {
       document.body.style.cursor = "auto";
-      console.log(_this);
+      newGamer = true;
+      _this.scene.start("NewGameScene");
+    });
+    spBtns[1].on("pointerdown", function() {
+      document.body.style.cursor = "auto";
+      continuer = true;
       _this.scene.start("NewGameScene");
     });
   }
